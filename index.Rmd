@@ -1,10 +1,11 @@
 ---
-title: "Exact Statistics and Semi-Parametric Tests for Small Network Data\\footnote{Contact: \\url{vegayon@usc.edu}. We thank members of our MURI research team, USC's Center for Applied Network Analysis, Garry Robins, Carter Butts, Johan Koskinen, Noshir Contractor, and attendees of the NASN 2018 conference for their comments.}"
+title: "Exact Statistics and Semi-Parametric Tests for Small Network Data"
 author:
   - \textbf{George G. Vega Yon, MS}
   - Andrew Slaughter, PhD
   - Kayla de la Haye, PhD
 date: "Sunbelt 2019, Montreal \\linebreak[4]June 20, 2019"
+institute: "\\includegraphics[width=.15\\linewidth]{usc.pdf} \\hspace{.5cm} \\includegraphics[width=.15\\linewidth]{sunbelt-logo.pdf}"
 output:
   beamer_presentation:
     slide_level: 2 # revealjs::revealjs_presentation
@@ -13,7 +14,7 @@ output:
     includes:
       in_header: notation-def.tex
 aspectratio: 169
-handout: false
+handout: true
 fontsize: 10pt
 bibliography: bibliography.bib
 ---
@@ -29,12 +30,14 @@ knitr::knit_hooks$set(smallsize = function(before, options, envir) {
 knitr::opts_chunk$set(echo = TRUE, smallsize=TRUE)
 ```
 
-## Funding Acknowledgement
+## Acknowledgements
+
+\footnotesize
 
 \begincols
 \begincol{.2\linewidth}
 
-\includegraphics[width=.8\linewidth]{fig/ARO_logo.png}
+\includegraphics[width=.7\linewidth]{fig/ARO_logo.png}
 
 \endcol
 
@@ -42,9 +45,7 @@ knitr::opts_chunk$set(echo = TRUE, smallsize=TRUE)
 This material is based upon work support by, or in part by, the U.S. Army Research
 Laboratory and the U.S. Army Research Office under grant number W911NF-15-1-0577
 \endcol
-
 \endcols
-
 
 \begincols
 \begincol{.79\linewidth}
@@ -54,10 +55,11 @@ of Southern California’s Center for High-Performance Computing (hpc.usc.edu).
 \endcol
 
 \begincol{.2\linewidth}
-\includegraphics[width = 1\linewidth]{fig/usc.pdf}
+\includegraphics[width = .7\linewidth]{fig/usc.pdf}
 \endcol
 \endcols
 
+We thank members of our MURI research team, USC's Center for Applied Network Analysis, Garry Robins, Carter Butts, Johan Koskinen, Noshir Contractor, and attendees of the NASN 2018 conference for their comments.
 
 \begin{figure}
 \centering
@@ -77,19 +79,17 @@ Two research questions\pause
 
 \end{centering}
 
-\raggedleft We will focus on the first one
-
 ---
 
 To answer this question, we have the following experimental data: \pause
 
 - 42 mixed-gender teams,\pause
 
-- Which completed 1 hour of group tasks (collective intelligence developed by MIT [@Kim2017])\pause
+- Which completed 1 hour of group tasks (collective intelligence developed by our collaborators at MIT)\pause
 
 - Survey capturing information regarding socio-demographics **and**:\pause
     
-    - \uscred{Social Intelligence} (SI domains): Social Perception (measured by RME), Social Accomodation, Social Gregariousness, and Social Awareness
+    - \uscred{Social Intelligence}: Social Perception (measured by RME), Social Accomodation, Social Gregariousness, and Social Awareness \pause
     
     - \uscred{Social Networks}: Advice Seeking, Leadership, Influence (among others).
 
@@ -177,15 +177,11 @@ Following @Handcock2003, the key question is: Where do the sufficient statistics
 
 Keeping $n\leq 6$ we can\pause
 
--  Compute the likelihood function exactly, and hence use ``simple'' optimization to get MLEs\pause
+-  Compute the likelihood function exactly, and hence use ``simple'' optimization to get MLEs.\pause
 
-What's more
+-  Obtain more \uscred{accurate} estimates \uscred{faster}\pause{} (in most cases). \pause
 
--  Enough flexibility to, e.g., go for pooled estimates (helps with \uscred{power} \textit{and} \uscred{degeneracy})\pause
-
--  Pooled estimates is a natural approach for small networks \pause
-
--  Generate random sequences of ERGMs from fitted models fast (in-memory) \pause
+-  Since (usually) small networks come in many...\pause obtain pooled estimates. Which helps with \uscred{power} \textit{and} \uscred{degeneracy})\pause
 
 -  etc.\pause
 
@@ -209,12 +205,14 @@ Sidetrack...
 \alert{Special thanks to George Barnett who proposed the name during the 2018 NASN!}
 
 
-## `ergmito` example
+## Quick example
 
-```{r loading-fivenets, cache=TRUE}
+```{r loading-fivenets, include=FALSE}
 library(ergmito)
 data(fivenets, package = "ergmito")
 ```
+
+Suppose that we have 5 `network`s (as in the R package `network`)
 
 ```{r plotfivenets, warning=FALSE, message=FALSE, echo=FALSE, fig.width=6, fig.height=3, out.width='.5\\linewidth', fig.align='center', cache=TRUE}
 library(sna)
@@ -236,19 +234,15 @@ legend("center", fill = c("white", USCCARDINAL), legend = c("Male", "Female"), c
 par(op)
 ```
 
-----
+\begin{minipage}[c]{.6\linewidth}
+And we would like to fit a model using the edgecount and number of gender-homophilic ties.\pause
+\end{minipage}
 
-```{r fivenets-1, cache=TRUE}
-# Looking at one of the five networks
-fivenets[[1]]
-```
-
-\pause How can we fit an ERGMito to this 5 networks?
+\raggedleft \large How can we do it?
 
 ## `ergmito` example (cont'd)
 
 The same as you would do with the `ergm` package\pause{}
-
 
 ```{r fit-fivenets, cache=TRUE}
 model1 <- ergmito(fivenets ~ edges + nodematch("female"))
@@ -262,43 +256,48 @@ summary(model1) #
 
 \pause
 
-By skipping the MCMC part we:\pause
+Go to \url{https://github.com/muriteams/ergmito} for more on this R package.
+<!-- --- -->
 
-*  Obtain estimates \uscred{faster}, and \pause
+<!-- ```{r gof-fivenets-print, cache=TRUE, out.width=".7\\linewidth", fig.align='center', width=8, height=6} -->
+<!-- gof1 <- gof_ergmito(model1) -->
+<!-- plot(gof1) -->
+<!-- ``` -->
 
-*  obtain \uscred{more accurate} estimates.
+## How many networks?
 
----
+-  Thinking about power and unbiasedness, we did a simulation study
 
-```{r gof-fivenets-print, cache=TRUE, out.width=".7\\linewidth", fig.align='center', width=8, height=6}
-gof1 <- gof_ergmito(model1)
-plot(gof1)
-```
+-  Simulated 100,000 samples of networks using the following steps:
 
-## Simulation study
+    1.  Draw parameters for _edges_ and _mutual_ from a uniform(-3, 3).
+    
+    2.  Draw group sizes $n_1\sim\mbox{Poisson}(10), n_2\sim\mbox{Poisson}(10), n_3\sim\mbox{Poisson}(10)$, networks of size 3, 4, and 5 respectively.
 
-1.  Draw parameters for _edges_ and _mutual_ from a uniform(-3, 3).
+    3.  Using 1. and 2., simulate networks using ERGM
+    
+-  We looked at empirical bias (sanity check), and power
 
-2.  Using those parameters, sampled $n_1\sim\mbox{Poisson}(10), n_2\sim\mbox{Poisson}(10), n_3\sim\mbox{Poisson}(10)$
-    networks of size 3, 4, and 5 respectively.
 
-3.  Estimated the pooled ERGMs using both the MLE and the bootstrap version.
-
-## Simulation study: Empirical Bias
+## How many networks? Bias
 
 \begin{figure}
 \centering
 \includegraphics[width=.65\linewidth]{fig/bias-02-various-sizes-3-5.pdf}
 \end{figure}
 
-## Simulation study: Power
+## How many networks? Power
 
 \begin{figure}
 \centering
 \includegraphics[width=.65\linewidth]{fig/power-02-various-sizes-3-5.pdf}
-\end{figure}
+\end{figure} \pause{}
+
+What about a real data set?
 
 ## Preliminary results
+
+From our sample of 42 small networks:
 
 ```{r muri-pre, cache=TRUE, echo=FALSE, results='asis'}
 ans       <- readRDS("model/ergmito_forward_selection_part4.rds")
@@ -312,17 +311,65 @@ texreg::texreg(
   )
 ```
 
+## Context: Social abilities and team performance
+
+Two research questions\pause
+
+\begin{centering}
+
+\large \sout{How do \uscred{social abilities} impact \uscred{network structure}?} 
+
+How does \uscred{collective intelligence} affect team (network) \uscred{performance}?
+\normalsize
+
+\end{centering}
+
+## Networks and team performance
+
+Suppose we have the following:
+
+-  Data on structure, nodes, and an outcome: $\left(\graph, \indepvar, \depvar\right)$\pause
+
+-  In general, we are interested on assessing the following: $\left.\left(\graph\perp\depvar\right) \right| \indepvar$ ?\pause
+
+-  Ways to solve this: parametrically (e.g. GLMs) and non-parametrically (permutation tests):\pause
+
+    -  Parametrically: Sample size?\pause
+    
+    -  Non-parametrically: Control for confounders ($\indepvar \to\depvar, \indepvar\to\graph$)?\pause
+
+Perhaps ERGMs can help us here (to generate null distributions)
+
+---
+
+\footnotesize
+
+\def\svgwidth{.8\linewidth}
+\begin{figure}
+\centering
+\input{fig/struct-test.pdf_tex}
+\end{figure}\pause
+
+\normalsize
+
+<!-- \begin{minipage}[c]{.7\linewidth} -->
+<!-- We can use the distribution of the sequence $\{t_1, \dots, t_B\}$ as null to compare against $t_0$\pause -->
+<!-- \end{minipage} -->
+
+We are still working (thinking) about this...
+
+
 
 ## Discussion
 
-*   This is not new.\pause{} What's new is the set of tools to apply it\pause
+*   ERGMItos... This is not new.\pause{} What's new is the set of tools to apply it\pause
 
 *   Taking this approach we can improve our estimates (power) and help with
-    degeneracy (all by pooling)\pause
+    degeneracy\pause
 
-*   The tool is working (that's what the simulation say)\pause
+*   The tool is working\pause{}(according to the simulation study...)\pause
 
-*   Need to conduct more simulations using _nodal_ attributes\pause
+*   Need to conduct more simulations using _nodal_ attributes and compare with ERGM block diagnoal models.\pause
 
 *   What about goodness-of-fit? Still need to better think about it
     
@@ -337,8 +384,12 @@ The simplicity of the estimation procedure allows us to think of:\pause
 
 -  More flexible formulas (e.g. interactions between terms)\pause
 
--  Better odds ratios (not simply exponentiating the coefficients)
+-  Better odds ratios (not simply exponentiating the coefficients)\pause
 
+-  Simulation based methods (small size $\implies$ sampling from in-memory data)\pause
+
+
+But we are still (very) interested about the problem of identifying associations between group and structure.
 
 ## Thanks!
 
@@ -361,50 +412,5 @@ The simplicity of the estimation procedure allows us to think of:\pause
 
 \end{centering}
 
-## Pseudo-bonus track
-
-We still care about the relation between collective intelligence and performance.\pause{} How can we assess this?\pause
-
--  GLMs and alike\pause
-
--  Permutation tests\pause
-
--  Use fitted ERGM to our benefit, e.g. sample from ERGM distribution to
-   do a simulation based test.\pause
-   
-## Pseudo-bonus track (contd')
-
-(sorry the heavy notation, but) Suppose that we have a 3 networks of sizes 4, 4, and 5 respectively. 
-
-\footnotesize
-
-\def\svgwidth{.8\linewidth}
-\begin{figure}
-\centering
-\input{fig/struct-test.pdf_tex}
-\end{figure}
-
-\normalsize
-
-We can use the distribution of the sequence $\{t_1, \dots, t_B\}$ as null to compare against $t_0$
-
-## Thanks (again)!
-
-\begin{centering}
-
-\Large \uscred{Exact Statistics and Semi-Parametric Tests for Small Network Data}
-
-\includegraphics[width=.2\linewidth]{logo.png}
-
-\large \textbf{George G. Vega Yon, MS} \and2 Andrew Slaughter, PhD \and2 Kayla de la Haye, PhD
-
-\href{mailto:vegayon@usc.edu}{vegayon@usc.edu} 
-
-\href{https://ggvy.cl}{https://ggvy.cl} 
-
-\includegraphics[width=.02\linewidth]{github.png}\href{https://github.com/gvegayon}{gvegayon}
-\includegraphics[width=.02\linewidth]{twitter.png}\href{https://twitter.com/gvegayon}{gvegayon}
-
-\end{centering}
 
 ## References
