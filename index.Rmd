@@ -14,7 +14,7 @@ output:
     includes:
       in_header: notation-def.tex
 aspectratio: 169
-handout: true
+# handout: true
 fontsize: 10pt
 bibliography: bibliography.bib
 ---
