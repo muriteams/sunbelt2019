@@ -32,7 +32,7 @@ knitr::opts_chunk$set(echo = TRUE, smallsize=TRUE)
 
 ## Acknowledgements
 
-\footnotesize
+\scriptsize
 
 \begincols
 \begincol{.2\linewidth}
@@ -59,7 +59,7 @@ of Southern California’s Center for High-Performance Computing (hpc.usc.edu).
 \endcol
 \endcols
 
-We thank members of our MURI research team, USC's Center for Applied Network Analysis, Garry Robins, Carter Butts, Johan Koskinen, Noshir Contractor, and attendees of the NASN 2018 conference for their comments.
+The views expressed in this presentation are those of the authors, and do not represent the official policy or positions of the Department of the Army, the DoD, or the U.S. Government.
 
 \begin{figure}
 \centering
@@ -140,7 +140,7 @@ Following @Handcock2003, the key question is: Where do the sufficient statistics
 
 \begin{figure}
 \centering
-\includegraphics[height=.6\textheight]{handcock2003-figure5.pdf}
+\includegraphics[height=.6\textheight]{handcock2003-figure1.pdf}
 \end{figure}
 
 \pause
@@ -376,26 +376,25 @@ We are still working (thinking) about this...
 
 ## Discussion (contd')
 
-The simplicity of the estimation procedure allows us to think of:\pause
+*  The simplicity of the estimation procedure allows us to think of:\pause
 
--  Separable Temporal ERGMitos, a.k.a. TERGMitos \pause
+    -  Separable Temporal ERGMitos, a.k.a. TERGMitos \pause
 
--  Mixture models and Bayesian inference (if you are into that kind of stuff)\pause
+    -  Mixture models and Bayesian inference (if you are into that kind of stuff)\pause
 
--  More flexible formulas (e.g. interactions between terms)\pause
+    -  More flexible formulas (e.g. interactions between terms)\pause
 
--  Better odds ratios (not simply exponentiating the coefficients)\pause
+    -  Better odds ratios (not simply exponentiating the coefficients)\pause
 
--  Simulation based methods (small size $\implies$ sampling from in-memory data)\pause
+    -  Simulation based methods (small size $\implies$ sampling from in-memory data)\pause
 
-
-But we are still (very) interested about the problem of identifying associations between group and structure.
+*  Still thinking about how to test for association between network structure and group outcome
 
 ## Thanks!
 
 \begin{centering}
 
-\Large \uscred{Exact Statistics and Semi-Parametric Tests for Small Network Data}
+We thank members of our MURI research team, USC's Center for Applied Network Analysis, Garry Robins, Carter Butts, Johan Koskinen, Noshir Contractor, and attendees of the NASN 2018 conference for their comments.
 
 \includegraphics[width=.2\linewidth]{logo.png}
 
