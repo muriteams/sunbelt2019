@@ -1,11 +1,12 @@
 ---
 title: "Exact Statistics and Semi-Parametric Tests for Small Network Data"
 author:
-  - \textbf{George G. Vega Yon, MS}
-  - Andrew Slaughter, PhD
-  - Kayla de la Haye, PhD
+  - \textbf{George G. Vega Yon, MS}$^\star$
+  - Andrew Slaughter, PhD$^\dagger$
+  - Kayla de la Haye, PhD$^\star$
 date: "Sunbelt 2019, Montreal \\linebreak[4]June 20, 2019"
-institute: "\\includegraphics[width=.15\\linewidth]{usc.pdf} \\hspace{.5cm} \\includegraphics[width=.15\\linewidth]{sunbelt-logo.pdf}"
+# institute: "\\includegraphics[width=.15\\linewidth]{usc.pdf} \\hspace{.5cm} \\includegraphics[width=.15\\linewidth]{sunbelt-logo.pdf}"
+institute: "\\begin{minipage}[c]{.3\\linewidth}\\centering $^\\star$University of Southern California\\linebreak[4]Department of Preventive Medicine\\end{minipage}\\begin{minipage}[c]{.3\\linewidth}\\centering $^\\dagger$U.S. Army Research Institute for the Behavioral and Social Sciences\\end{minipage}"
 output:
   beamer_presentation:
     slide_level: 2 # revealjs::revealjs_presentation
@@ -14,9 +15,10 @@ output:
     includes:
       in_header: notation-def.tex
 aspectratio: 169
-# handout: true
+# handout: false
 fontsize: 10pt
 bibliography: bibliography.bib
+colortheme: beaver
 ---
 
 ```{r setup, include=FALSE}
@@ -85,9 +87,9 @@ To answer this question, we have the following experimental data: \pause
 
 - 42 mixed-gender teams,\pause
 
-- Which completed 1 hour of group tasks (collective intelligence developed by our collaborators at MIT)\pause
+- Which completed 1 hour of group tasks (MIT's IQ test for teams)\pause
 
-- Survey capturing information regarding socio-demographics **and**:\pause
+- Individual survey capturing information regarding socio-demographics **and**:\pause
     
     - \uscred{Social Intelligence}: Social Perception (measured by RME), Social Accomodation, Social Gregariousness, and Social Awareness \pause
     
@@ -100,7 +102,7 @@ To answer this question, we have the following experimental data: \pause
 \includegraphics[width = .6\linewidth]{fig/plot-graph-4-1.pdf}
 \end{figure}
 
-We can do a lot of simple statistics: density, prop of \textit{\color{gray}[blank]}, etc. but...\pause{} \uscred{\large how can we go beyond that?}
+We can do a lot of simple statistics: density, \% of \textit{\color{gray}[blank]}, etc. but...\pause{} \uscred{\large how can we go beyond that?}
 
 ## Exponential random graph models
 
@@ -118,7 +120,7 @@ We can do a lot of simple statistics: density, prop of \textit{\color{gray}[blan
 \end{tabular}
 \end{figure}
 
-ERGMs can do the job, but the only problem is...\pause{} have you tried estimating ERGMs in small networks?
+ERGMs can do the job, but the only problem is...\pause{} have you tried estimating ERGMs on small networks?
 
 ## Exponential random graph models for small networks
 
@@ -128,9 +130,9 @@ A lot of\pause
 
 -  Sometimes we also go for using a single big (very sparse) graph\pause
     
-    -  Block diagnoal matrix 
+    -  Block diagonal matrix 
     
-    -  Constrain the sampling space puting structural zeros (thanks statnet for the `blockdiag(attrname)` constraint!)\pause
+    -  Constrain the sampling space puting structural zeros\pause
     
 This fails too often (smaller networks = higher chance of model degeneracy).
 
@@ -164,13 +166,13 @@ Following @Handcock2003, the key question is: Where do the sufficient statistics
     
     \pause
 
-*   So, if $n = 6$, then we have approx 1,000,000,000 terms.\pause 
+*   So, if $n = 6$, then we have approx 1,000,000,000 terms \includegraphics[width=.04\linewidth]{scared.pdf}.\pause 
 
 *   This has lead the field to aim for (very neat) simulation based methods\pause
 
-*   What if our networks have at most that (6 nodes)? \pause
+*   But, if our small networks have (at most) 6 nodes... \pause
 
-\large \uscred{We can go back to the \textbf{good-old-fashion} MLE!}\normalsize \raggedleft
+\large \uscred{We can go back to the \textbf{good-old-fashion} MLE}\normalsize \raggedleft
 
 ---
 
@@ -187,7 +189,7 @@ Keeping $n\leq 6$ we can\pause
 
 This and more has been implemented in the `ergmito` (\includegraphics[width=.1\linewidth]{fig/lifecycle-experimental-orange.pdf}) R package (available at https://github.com/muriteams/ergmito) \pause
 
-(built on top of Statnet's amazing `ergm` [@hunter2008; @Handcock2018] R package)
+(built on top of Statnet's amazing `ergm` @hunter2008; @Handcock2018 R package)
 
 ---
 
@@ -304,12 +306,19 @@ ans       <- readRDS("model/ergmito_forward_selection_part4.rds")
 library(ergmito)
 
 names(ans) <- gsub("ans_", "", names(ans))
-
 texreg::texreg(
   ans, booktabs = TRUE, fontsize = "tiny",
   use.packages = FALSE, caption = "Selected models for each one of the studied networks. Results presented here correspond to a forward selection process."
   )
 ```
+
+----
+
+```{r muri-gof, cahe=TRUE, echo=FALSE, fig.align='center', out.width=".8\\linewidth"}
+load("model/ergmito_forward_selection_part4_gof.rda")
+plot(gof_advice, main = "GOF Advice seeking network")
+```
+
 
 ## Context: Social abilities and team performance
 
@@ -330,15 +339,25 @@ Suppose we have the following:
 
 -  Data on structure, nodes, and an outcome: $\left(\graph, \indepvar, \depvar\right)$\pause
 
--  In general, we are interested on assessing the following: $\left.\left(\graph\perp\depvar\right) \right| \indepvar$ ?\pause
+-  In general, we are interested on assessing the following: $\graph\perp\depvar$ \pause
 
 -  Ways to solve this: parametrically (e.g. GLMs) and non-parametrically (permutation tests):\pause
 
-    -  Parametrically: Sample size?\pause
+- For parametric approaches: Sample size?\pause
     
-    -  Non-parametrically: Control for confounders ($\indepvar \to\depvar, \indepvar\to\graph$)?\pause
+- Non-parametrically: Control for confounders ($\indepvar \to\depvar, \indepvar\to\graph$)?\pause
 
 Perhaps ERGMs can help us here (to generate null distributions)
+
+<!-- ## Networks and team performance -->
+
+<!-- Imagine that: -->
+
+<!-- - $\indepvar_i$: Individual level CI -->
+
+<!-- - $\graph \sim \mbox{ERGM}\left(\mbox{indegree of CI, edgecount}\right)$ -->
+
+<!-- - $\mbox{E}\left\{\depvar \right\} = $ -->
 
 ---
 
@@ -367,9 +386,9 @@ We are still working (thinking) about this...
 *   Taking this approach we can improve our estimates (power) and help with
     degeneracy\pause
 
-*   The tool is working\pause{}(according to the simulation study...)\pause
+*   The tool is working\pause{} (according to the simulation study...)\pause
 
-*   Need to conduct more simulations using _nodal_ attributes and compare with ERGM block diagnoal models.\pause
+*   Need to conduct more simulations using _nodal_ attributes and compare with ERGM block diagonal models.\pause
 
 *   What about goodness-of-fit? Still need to better think about it
     
@@ -382,11 +401,13 @@ We are still working (thinking) about this...
 
     -  Mixture models and Bayesian inference (if you are into that kind of stuff)\pause
 
-    -  More flexible formulas (e.g. interactions between terms)\pause
+    -  More flexible formulas (e.g. interactions between terms and graph-level attributes) \pause{}
 
     -  Better odds ratios (not simply exponentiating the coefficients)\pause
 
-    -  Simulation based methods (small size $\implies$ sampling from in-memory data)\pause
+    -  Simulation based methods (small size $\implies$ sampling from in-memory data, and exact tests)\pause
+    
+    -  Cross-validation/model selection in ERGMs (thank you, Nolan \includegraphics[width=.04\linewidth]{vader.png}!)\pause{}
 
 *  Still thinking about how to test for association between network structure and group outcome
 
